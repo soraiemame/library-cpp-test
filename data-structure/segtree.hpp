@@ -4,6 +4,7 @@
 #include<vector>
 #include<functional>
 #include<assert.h>
+
 template<class T>
 struct SegTree{
     using fx = std::function<T(T,T)>;

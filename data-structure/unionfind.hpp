@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <assert.h>
+
 struct UnionFind{
     int n;
     std::vector<int> dat;

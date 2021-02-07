@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <assert.h>
+
 template<class T>
 struct BinaryIndexedTree{
     int n;

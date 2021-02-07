@@ -1,11 +1,5 @@
-#line 1 "RMQ_RUQ_1.test.cpp"
-#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_F"
-
-#include <iostream>
-
-#line 1 "/mnt/c/Users/funas/OneDrive/\u30c7\u30b9\u30af\u30c8\u30c3\u30d7/cpp/library-cpp/data-structure/lazysegtree.hpp"
-
-
+#ifndef SORAIE_LAZYSEGTREE
+#define SORAIE_LAZYSEGTREE
 
 #include <vector>
 #include <algorithm>
@@ -127,26 +121,4 @@ struct SegTree{//RAQ,RUQ,RSQ,RMinQ,RmaxQ
     T get(int a){return range_min(a,a + 1);}
 };
 
-
-#line 6 "RMQ_RUQ_1.test.cpp"
-
-int main(){
-    int N,Q;
-    std::cin >> N >> Q;
-    SegTree<int> S(N,2147483647);
-    S.range_update(0,N,2147483647);
-    for(int i = 0;i < Q;i++){
-        int t;
-        std::cin >> t;
-        if(t == 0){
-            int s,t,x;
-            std::cin >> s >> t >> x;
-            S.range_update(s,t + 1,x);
-        }
-        if(t == 1){
-            int s,t;
-            std::cin >> s >> t;
-            std::cout << S.range_min(s,t + 1) << "\n";
-        }
-    }
-}
+#endif /*SORAIE_LAZYSEGTREE*/

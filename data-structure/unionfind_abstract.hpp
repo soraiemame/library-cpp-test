@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <functional>
+
 template<class T = int>
 struct UnionFind{
     int n;
