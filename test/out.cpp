@@ -1,5 +1,5 @@
-#line 1 "RMQ_RUQ_1.test.cpp"
-#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_F"
+#line 1 "RUQ_1.test.cpp"
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_D"
 
 #include <iostream>
 
@@ -128,13 +128,12 @@ struct SegTree{//RAQ,RUQ,RSQ,RMinQ,RmaxQ
 };
 
 
-#line 6 "RMQ_RUQ_1.test.cpp"
+#line 6 "RUQ_1.test.cpp"
 
 int main(){
     int N,Q;
     std::cin >> N >> Q;
     SegTree<int> S(N,2147483647);
-    S.range_update(0,N,2147483647);
     for(int i = 0;i < Q;i++){
         int t;
         std::cin >> t;
@@ -144,9 +143,9 @@ int main(){
             S.range_update(s,t + 1,x);
         }
         if(t == 1){
-            int s,t;
-            std::cin >> s >> t;
-            std::cout << S.range_min(s,t + 1) << "\n";
+            int a;
+            std::cin >> a;
+            std::cout << S.get(a) << "\n";
         }
     }
 }
