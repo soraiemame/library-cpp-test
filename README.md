@@ -3,6 +3,9 @@
 
 # 目次
 - [これは何？](#これは何？)
+- [目次](#目次)
+- [datastructure](#datastructure)
+- [math](#math)
 
 # datastructure
 - [unionfind](#unionfind)
@@ -180,3 +183,65 @@ T get(int a)
 ```
 要素 a を取得する
 
+# math
+
+- [floor ceil](#floor-ceil)
+- [parse](#parse)
+
+## floor ceil
+- 安全な割り算
+```C++
+long long floordiv(long long a,long long b)
+```
+a / b 以下の最大の整数を求める
+```C++
+long long floordiv(long long a,long long b)
+```
+a / b 以上の最小の整数を求める
+
+## parse
+- [abc191-D](https://atcoder.jp/contests/abc191/tasks/abc191_d) を受けて作った
+```C++
+long long x10(std::string s,size_t n)
+```
+\(s * 10^n\) を求める
+
+## modint
+- mod を自動で取る構造体
+```C++
+modint(long long a)
+```
+要素が a の modint を作る
+
+## modulo
+- 組み合わせや階乗を mod で割った余りを求める
+```C++
+fac_solver(int n_)
+```
+- 上限が n_ のソルバーを作る
+```C++
+mint fac(int n)
+```
+\(n!\) を mod で割った余りを求める
+```C++
+mint inv(int n)
+```
+n の逆元を求める
+```C++
+mint finv(int n)
+```
+1~nまでの逆元の総積を求める
+```C++
+mint PER(int n,int k)
+```
+\(_n P _k\) を mod で割った余りを求める
+```C++
+mint COM(int n,int k)
+```
+- \(_n C _k\) を mod で割った余りを求める
+- \(O(1)\)
+```C++
+mint COM2(long long n,int k)
+```
+- \(_n C _k\) を mod で割った余りを求める
+- \(O(k)\)
