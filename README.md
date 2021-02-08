@@ -234,14 +234,14 @@ mint finv(int n)
 ```C++
 mint PER(int n,int k)
 ```
-\(_n P _k\) を mod で割った余りを求める
+$_n P _k$ を mod で割った余りを求める
 ```C++
 mint COM(int n,int k)
 ```
-- \(_n C _k\) を mod で割った余りを求める
-- \(O(1)\)
+- $_n C _k$ を mod で割った余りを求める
+- $O(1)$
 ```C++
 mint COM2(long long n,int k)
 ```
-- \(_n C _k\) を mod で割った余りを求める
-- \(O(k)\)
+- $_n C _k$ を mod で割った余りを求める
+- $O(k)$
