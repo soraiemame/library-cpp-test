@@ -1,15 +1,8 @@
-#line 1 "sparse_table.test.cpp"
-#define PROBLEM "https://judge.yosupo.jp/problem/staticrmq"
+#ifndef SORAIE_SPARSE_TABLE
+#define SORAIE_SPARSE_TABLE
 
-#include <iostream>
-#include <algorithm>
 #include <vector>
-
-#line 1 "/mnt/c/Users/funas/OneDrive/\u30c7\u30b9\u30af\u30c8\u30c3\u30d7/cpp/library-cpp/data-structure/sparse_table.hpp"
-
-
-
-#line 6 "/mnt/c/Users/funas/OneDrive/\u30c7\u30b9\u30af\u30c8\u30c3\u30d7/cpp/library-cpp/data-structure/sparse_table.hpp"
+#include <algorithm>
 #include <assert.h>
 
 template<class T>
@@ -36,18 +29,4 @@ struct SparseTable{
     }
 };
 
-
-#line 8 "sparse_table.test.cpp"
-
-int main(){
-    int N,Q;
-    std::cin >> N >> Q;
-    std::vector<long long> vec(N);
-    for(int i = 0;i < N;i++)std::cin >> vec[i];
-    SparseTable<long long> S(vec);
-    for(int i = 0;i < Q;i++){
-        int l,r;
-        std::cin >> l >> r;
-        std::cout << S.query(l,r) << "\n";
-    }
-}
+#endif /*SORAIE_SPARSE_TABLE*/
