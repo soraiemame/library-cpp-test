@@ -187,6 +187,10 @@ T get(int a)
 
 - [floor ceil](#floor-ceil)
 - [parse](#parse)
+- [modint](#modint)
+- [modulo](#modulo)
+- [FFT](#FFT)
+- [NTT(friendly mod)](#NTT(friendly-mod))
 
 ## floor ceil
 - 安全な割り算
@@ -247,7 +251,7 @@ mint COM2(long long n,int k)
 - O(k)
 
 ## FFT
-- 複素数を使った畳み込み
+複素数を使った畳み込み
 ```C++
 FFT()
 ```
@@ -258,7 +262,7 @@ vector<T> convolution(vector<T> A,vector<T> B)
 A と B を畳みこんだ結果を求める
 
 ## NTT(friendly mod)
--NTT friendly の mod で畳み込みを行う
+NTT friendly の mod で畳み込みを行う
 ```C++
 NTT<mod,base,max_exp>()
 ```
