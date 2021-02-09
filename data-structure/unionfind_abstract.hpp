@@ -23,16 +23,15 @@ struct UnionFind{
         if(par[a] < 0)return a;
         else return par[a] = find(par[a]);
     }
-    bool unite(int a,int b){
+    void unite(int a,int b){
         assert(0 <= a && a < n && 0 <= b && b < n);
         a = find(a);
         b = find(b);
-        if(a == b)return false;
+        if(a == b)return;
         if(par[a] > par[b])std::swap(a,b);
         par[a] += par[b];
         par[b] = a;
         fx(dat[a],dat[b]);
-        return true;
     }
     bool same(int a,int b){
         assert(0 <= a && a < n && 0 <= b && b < n);

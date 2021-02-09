@@ -2,6 +2,7 @@
 #define SORAIE_BINARY_INDEXED_TREE
 
 #include <vector>
+#include <iostream>
 #include <assert.h>
 
 template<class T>
@@ -32,6 +33,10 @@ struct BinaryIndexedTree{
     T sum(int l,int r){
         assert(0 <= l && l <= r && r <= n);
         return sum(r) - sum(l);
+    }
+    void deb(){
+        std::cerr << "BIT debug: [";
+        for(int i = 0;i < n;i++)std::cerr << sum(i,i + 1) << (i == n - 1 ? "]\n":",");
     }
 };
 

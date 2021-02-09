@@ -204,7 +204,7 @@ a / b 以上の最小の整数を求める
 ```C++
 long long x10(std::string s,size_t n)
 ```
-\(s * 10^n\) を求める
+s * (10 ^ n) を求める
 
 ## modint
 - mod を自動で取る構造体
@@ -222,7 +222,7 @@ fac_solver(int n_)
 ```C++
 mint fac(int n)
 ```
-\(n!\) を mod で割った余りを求める
+n! を mod で割った余りを求める
 ```C++
 mint inv(int n)
 ```
@@ -234,14 +234,36 @@ mint finv(int n)
 ```C++
 mint PER(int n,int k)
 ```
-$_n P _k$ を mod で割った余りを求める
+nPk を mod で割った余りを求める
 ```C++
 mint COM(int n,int k)
 ```
-- $_n C _k$ を mod で割った余りを求める
-- $O(1)$
+- nCk を mod で割った余りを求める
+- O(1)
 ```C++
 mint COM2(long long n,int k)
 ```
-- $_n C _k$ を mod で割った余りを求める
-- $O(k)$
+- nCk を mod で割った余りを求める
+- O(k)
+
+## FFT
+- 複素数を使った畳み込み
+```C++
+FFT()
+```
+FFT のソルバーを生成する
+```C++
+vector<T> convolution(vector<T> A,vector<T> B)
+```
+A と B を畳みこんだ結果を求める
+
+## NTT(friendly mod)
+-NTT friendly の mod で畳み込みを行う
+```C++
+NTT<mod,base,max_exp>()
+```
+NTT のソルバーを生成する
+```C++
+vector<mint> convolution(vector<mint> A,vector<mint> B)
+```
+A と B を畳みこんだ結果 mod. mod を求める
