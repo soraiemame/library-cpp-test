@@ -8,6 +8,7 @@ int main(){
     int N,Q;
     std::cin >> N >> Q;
     SegTree<int> S(N,2147483647);
+    S.range_update(0,N,2147483647);
     for(int i = 0;i < Q;i++){
         int t;
         std::cin >> t;

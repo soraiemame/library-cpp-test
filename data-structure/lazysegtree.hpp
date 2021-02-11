@@ -2,6 +2,7 @@
 #define SORAIE_LAZYSEGTREE
 
 #include <vector>
+#include <iostream>
 #include <algorithm>
 #include <assert.h>
 
@@ -19,10 +20,9 @@ struct SegTree{//RAQ,RUQ,RSQ,RMinQ,RmaxQ
         max_dat = std::vector<T>(n * 2 - 1);
         sum_dat = std::vector<T>(n * 2 - 1);
         lazy = std::vector<T_pair>(n * 2 - 1,std::make_pair(0,0));//0:add 1:update
-        range_update(0,n,e);
     }
     void set(int a,T x){
-        min_dat[a] = x;max_dat[a] = x;sum_dat[a] = x;
+        min_dat[a + n - 1] = x;max_dat[a + n - 1] = x;sum_dat[a + n - 1] = x;
     }
     void build(){
         for(int i = n - 2;i >= 0;i--){
@@ -119,6 +119,10 @@ struct SegTree{//RAQ,RUQ,RSQ,RMinQ,RmaxQ
     }
     T range_sum(int a,int b){return range_sum(a,b,0,0,n);}
     T get(int a){return range_min(a,a + 1);}
+    void deb(){
+        std::cerr << "debug: [";
+        for(int i = 0;i < n;i++)std::cerr << range_min(i,i + 1) << (i == n - 1 ? "]\n" : ",");
+    }
 };
 
 #endif /*SORAIE_LAZYSEGTREE*/
