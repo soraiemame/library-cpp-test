@@ -8,7 +8,7 @@
 int main(){
     int N,M,S;
     std::cin >> N >> M >> S;
-    std::vector<bellman_edge> G(M);
+    std::vector<edge2> G(M);
     for(int i = 0;i < M;i++)std::cin >> G[i].from >> G[i].to >> G[i].cost;
     const e_t INF = 1LL << 60;
     auto ans = bellman_ford(G,N,{S},INF);
