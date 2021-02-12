@@ -8,7 +8,12 @@
 struct UnionFind{
     int n;
     std::vector<int> dat;
-    UnionFind(int n_):n(n_),dat(n_,-1){}
+    UnionFind(int n_){init(n_);}
+    void init(int n_){
+        n = n_;
+        debug(n_);
+        dat = std::vector<int>(n_,-1);
+    }
     int find(int v){
         assert(0 <= v && v < n);
         if(dat[v] < 0)return v;
