@@ -11,7 +11,6 @@ struct UnionFind{
     UnionFind(int n_){init(n_);}
     void init(int n_){
         n = n_;
-        debug(n_);
         dat = std::vector<int>(n_,-1);
     }
     int find(int v){

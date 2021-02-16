@@ -2,9 +2,11 @@
 #define SORAIE_MODINT
 
 #include <algorithm>
+#include <iostream>
 
 template<long long MOD = 1000000007>
 struct modint {
+    using mint = modint<MOD>;
     long long x;
     modint(long long a = 0):x((a % MOD + MOD) % MOD){}
     inline constexpr modint operator-()const noexcept{return modint(-x);}
@@ -66,6 +68,7 @@ struct modint {
         modint res(*this);
         return res /= a;
     }
+    inline constexpr bool operator==(const modint &a)const noexcept{return x == a.x;}
     friend std::istream &operator>>(std::istream &is,modint &a) {
         is >> a.x;
         a.x = (a.x % MOD + MOD) % MOD;
@@ -76,8 +79,8 @@ struct modint {
         return os;
     }
     long long getmod(){return MOD;}
-    friend modint<MOD> modpow(modint<MOD> a,long long b)noexcept{
-        modint<MOD> res(1);
+    friend mint modpow(mint a,long long b)noexcept{
+        mint res(1);
         while(b){
             if(b & 1)res *= a;
             a *= a;
@@ -86,6 +89,7 @@ struct modint {
         return res;
     }
 };
+//using mint = modint<1'000'000'007>::mint;
 
 
 #endif /*SORAIE_MODINT*/

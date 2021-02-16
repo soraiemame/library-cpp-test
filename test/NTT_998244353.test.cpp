@@ -3,10 +3,10 @@
 #include <iostream>
 #include <vector>
 
-#include "../math/NTT_friendly.hpp"
+#include "../math/NTT_primitive_mod.hpp"
 
 int main(){
-    using ntt = NTT<998244353,31,23>;
+    using ntt = NTT_primitive<998244353,31,23>;
     ntt n;
     using mint = ntt::mint;
     int N,M;

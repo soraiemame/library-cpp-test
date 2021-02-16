@@ -6,13 +6,12 @@
 #include <iostream>
 #include <algorithm>
 #include <assert.h>
-using namespace std;
 
 #define x real()
 #define y imag()
 using DD = long double;
-using Point = complex<DD>;
-using VP = vector<Point>;
+using Point = std::complex<DD>;
+using VP = std::vector<Point>;
 const DD eps = 1e-9;
 struct lineseg{Point S,T;lineseg(Point s = 0,Point t = 0):S(s),T(t){}};
 struct line{Point S,T;line(Point s = 0,Point t = 0):S(s),T(t){}};
@@ -31,13 +30,13 @@ int sign(DD a){
 }
 Point inputP(){
     DD X,Y;
-    cin >> X >> Y;
+    std::cin >> X >> Y;
     return Point(X,Y);
 }
 bool eq(DD a,DD b){return abs(a - b) < eps;}
-ostream &operator<<(ostream& os,Point p){return os << "(" << p.x << "," << p.y << ")";}
-ostream &operator<<(ostream& os,line l){return os << l.S << "->" << l.T;}
-ostream &operator<<(ostream& os,lineseg l){return os << l.S << "->" << l.T;}
+std::ostream &operator<<(std::ostream& os,Point p){return os << "(" << p.x << "," << p.y << ")";}
+std::ostream &operator<<(std::ostream& os,line l){return os << l.S << "->" << l.T;}
+std::ostream &operator<<(std::ostream& os,lineseg l){return os << l.S << "->" << l.T;}
 DD det(Point a,Point b){return a.x * b.y - a.y * b.x;}
 DD dot(Point a,Point b){return a.x * b.x + a.y * b.y;}
 
@@ -104,18 +103,18 @@ DD distLL(line l,line m){
 //直線と線分
 DD distLS(line l,lineseg s){
     if(isecLS(l,s))return 0;
-    else return min(distLP(l,s.S),distLP(l,s.T));
+    else return std::min(distLP(l,s.S),distLP(l,s.T));
 }
 //線分と点
 DD distSP(lineseg s,Point p){
     Point q = project(line(s.S,s.T),p);
     if(isecSP(s,q))return abs(p - q);
-    else return min(abs(s.S - p),abs(s.T - p));
+    else return std::min(std::abs(s.S - p),std::abs(s.T - p));
 }
 //線分と線分
 DD distSS(lineseg s,lineseg t){
     if(isecSS(s,t))return 0;
-    else return min(min(distSP(s,t.S),distSP(s,t.T)),min(distSP(t,s.S),distSP(t,s.T)));
+    else return std::min(std::min(distSP(s,t.S),distSP(s,t.T)),std::min(distSP(t,s.S),distSP(t,s.T)));
 }
 //逆
 DD distPL(Point p,line l){return distLP(l,p);}
@@ -128,38 +127,38 @@ Point crosspointLL(line l,line m){
     DD a = det(m.T - m.S,m.S - l.S);
     DD b = det(m.T - m.S,l.T - l.S);
     if(sign(a) == 0 && sign(b) == 0)return l.S;
-    else if(sign(b) == 0)throw (string)"No crosspoint";
+    else if(sign(b) == 0)throw "No crosspoint";
     return l.S + (l.T - l.S) * (a / b);
 }
 
 //円についての色々
 //円と点
 DD distCP(circle c,Point p,bool inside_zero = 0){
-    if(inside_zero)return max(distPP(c.C,p) - c.r,DD(0.0));
-    else return max(abs(distPP(c.C,p) - c.r),DD(0.0));
+    if(inside_zero)return std::max(distPP(c.C,p) - c.r,DD(0.0));
+    else return std::max(std::abs(distPP(c.C,p) - c.r),DD(0.0));
 }
 
 //円と直線
-DD distCL(circle c,line l){return max(distLP(l,c.C) - c.r,DD(0.0));}
+DD distCL(circle c,line l){return std::max(distLP(l,c.C) - c.r,DD(0.0));}
 
 //円と線分
 DD distCS(circle c,lineseg s,bool inside_zero = 0){
     DD sqr1 = norm(s.S - c.C),sqr2 = norm(s.T - c.C);
     if(inside_zero == 0){
         if((sqr1 < c.r * c.r) ^ (sqr2 < c.r * c.r))return 0;
-        else if(sqr1 < c.r && sqr2 < c.r)return c.r - sqrtl(max(sqr1,sqr2));
-        else return max(distSP(s,c.C) - c.r,DD(0.0));
+        else if(sqr1 < c.r && sqr2 < c.r)return c.r - sqrtl(std::max(sqr1,sqr2));
+        else return std::max(distSP(s,c.C) - c.r,DD(0.0));
     }
     else{
         if(sqr1 < c.r * c.r || sqr2 < c.r * c.r)return 0;
-        else return max(distSP(s,c.C) - c.r,DD(0.0));
+        else return std::max(distSP(s,c.C) - c.r,DD(0.0));
     }
 }
 
 //円と円
 DD distCC(circle c,circle d){
     DD di = abs(c.C - d.C);
-    return sign(di - abs(c.r - d.r)) == 1 ? max(di - c.r - d.r,DD(0.0)):abs(c.r - d.r) - di;//!内包:内包
+    return sign(di - abs(c.r - d.r)) == 1 ? std::max(di - c.r - d.r,DD(0.0)):abs(c.r - d.r) - di;//!内包:内包
 }
 
 DD distPC(Point p,circle c,bool b = 0){return distCP(c,p,b);}
@@ -186,7 +185,7 @@ VP crosspointCL(circle c,line l){
     VP res;
     if(sign(distCL(c,l) - c.r) == 1)return res;
     Point p = project(l,c.C);//弦に対する垂直二等分線の交点
-    Point q = max(sqrtl(c.r * c.r - norm(p - c.C)),DD(0.0)) / abs(l.T - l.S) * (l.T - l.S);
+    Point q = std::max(sqrtl(c.r * c.r - norm(p - c.C)),DD(0.0)) / abs(l.T - l.S) * (l.T - l.S);
     res.push_back(p + q);
     if(sign(norm(p) - c.r * c.r) != 0)res.push_back(p - q);
     return res;
@@ -215,25 +214,25 @@ VP tangentpoints(circle c,Point p){
     VP res;
     DD sin = c.r / abs(p - c.C);
     if(sign(sin - DD(1.0)) == 1)return res;
-    DD theta = M_PI_2 - asin(min(sin,DD(1.0)));
-    res.push_back(c.C + (p - c.C) * polar(sin,theta));
-    if(sign(sin - DD(1.0)) != 0)res.push_back(c.C + (p - c.C) * polar(sin,-theta));
+    DD theta = M_PI_2 - asin(std::min(sin,DD(1.0)));
+    res.push_back(c.C + (p - c.C) * std::polar(sin,theta));
+    if(sign(sin - DD(1.0)) != 0)res.push_back(c.C + (p - c.C) * std::polar(sin,-theta));
     return res;
 }
 
 //2つの円の共通接線を返す
 //1.接線は分からないので接点との三角比を求める
 //2.単位ベクトルを掛けたりする
-vector<line> tangelines(circle c,circle d,bool same_point = 0){
-    vector<line> res;
+std::vector<line> tangetlines(circle c,circle d,bool same_point = 0){
+    std::vector<line> res;
     bool swaped = 0;
     if(c.r < d.r){
-        swap(c,d);
+        std::swap(c,d);
         swaped = 1;
     }
     DD g = norm(c.C - d.C);
     if(sign(g) == 0)return res;
-    Point u = (d.C - c.C) / sqrt(g);//c->dの単位ベクトル
+    Point u = (d.C - c.C) / sqrtl(g);//c->dの単位ベクトル
     Point v = u * Point(0,1);//uを90°回転
     for(int s : {-1,1}){
         DD h = (c.r + DD(s) * d.r) / sqrt(g);//cos(接点1,c.r,d.r)
@@ -242,7 +241,7 @@ vector<line> tangelines(circle c,circle d,bool same_point = 0){
             else res.push_back(line(c.C + u * c.r,c.C + u * c.r));
         }
         else if(sign(DD(1.0) - h * h) == 1){
-            Point uu = u * h,vv = v * sqrt(DD(1.0) - h * h);//uu:u * cos,vv:v * sin
+            Point uu = u * h,vv = v * sqrtl(DD(1.0) - h * h);//uu:u * cos,vv:v * sin
             res.push_back(line(c.C + (uu + vv) * c.r,d.C - (uu + vv) * d.r * DD(s)));
             res.push_back(line(c.C + (uu - vv) * c.r,d.C - (uu - vv) * d.r * DD(s)));
         }
@@ -317,7 +316,7 @@ circle minenclosingcircle(const VP &ps){
     for(Point p : alt){
         DD mx = 0;
         for(int i = 0;i < n;i++){
-            mx = max(mx,distPP(ps[i],p));
+            mx = std::max(mx,distPP(ps[i],p));
         }
         if(sign(r - mx) == 1){
             r = mx;
@@ -333,11 +332,11 @@ circle minenclosingcircle2(const VP &ps){
     DD move = 0.5;
     for(int i = 0;i < 40;i++){//精度
         for(int _ = 0;_ < 200;_++){//ここによって変わりそう
-            DD max = 0;
+            DD mx = 0;
             int k = 0;
             for(int j = 0;j < int(ps.size());j++){
-                if(max < norm(ps[j] - c)){
-                    max = norm(ps[j] - c);
+                if(mx < norm(ps[j] - c)){
+                    mx = norm(ps[j] - c);
                     k = j;
                 }
             }
@@ -347,7 +346,7 @@ circle minenclosingcircle2(const VP &ps){
     }
     DD r = 0;
     for(int i = 0;i < int(ps.size());i++){
-        r = max(r,abs(c - ps[i]));
+        r = std::max(r,std::abs(c - ps[i]));
     }
     return circle(c,r);
 }
@@ -389,7 +388,7 @@ int inpolygon(Point p,polygon& po){
             Point q = crosspointLL(line(p,p + DD(1.0)),line(a,b));
             if(sign(q.x - p.x) == 1 && !(sign(q.x - b.x) == 0 && sign(q.y - b.y) == 0))in = !in;
         }
-        catch(string s){continue;}
+        catch(...){continue;}
     }
     return in;
 }
@@ -424,25 +423,26 @@ VP convexhull(VP vp){
 }
 
 //最遠点対凸多角形になってる場合のみ
-pair<int,int> farthestpoints(const VP& con){
+std::pair<int,int> farthestpoints(const VP& con){
     int n = con.size();
-    int i = min_element(con.begin(),con.end(),compare_x) - con.begin();
-    int j = max_element(con.begin(),con.end(),compare_x) - con.begin();
-    int MAXI,MAXJ;
+    int i = std::min_element(con.begin(),con.end(),compare_x) - con.begin();
+    int j = std::max_element(con.begin(),con.end(),compare_x) - con.begin();
+    int MAXI = -1,MAXJ = -1;
     DD MAXDD = 0;
     for(int k = 0;k < 2 * n;k++){
-        if(MAXDD < norm(con[i] - con[j])){
-            MAXDD = norm(con[i] - con[j]);
+        if(MAXDD < std::norm(con[i] - con[j])){
+            MAXDD = std::norm(con[i] - con[j]);
             MAXI = i;MAXJ = j;
         }
         if(sign(det(con[(i + 1) % n] - con[i],con[j] - con[(j + 1) % n])) <= 0)j = (j + 1) % n;
         else i = (i + 1) % n;
     }
-    return make_pair(MAXI,MAXJ);
+    return std::make_pair(MAXI,MAXJ);
 }
 
 DD farthestdist(VP& vp){
     vp = convexhull(vp);
+    std::reverse(vp.begin(),vp.end());
     auto r = farthestpoints(vp);
     return abs(vp[r.first] - vp[r.second]);
 }
@@ -453,18 +453,22 @@ DD closestdist(VP &vp,int l,int r){
     if(r - l <= 1)return 1LL << 60;
     int mid = (l + r) / 2;
     DD X = vp[mid].x;
-    DD d = min(closestdist(vp,l,mid),closestdist(vp,mid,r));
-    inplace_merge(vp.begin() + l,vp.begin() + mid,vp.begin() + r,compare_y);
-    vector<Point> B;
+    DD d = std::min(closestdist(vp,l,mid),closestdist(vp,mid,r));
+    std::inplace_merge(vp.begin() + l,vp.begin() + mid,vp.begin() + r,compare_y);
+    std::vector<Point> B;
     for(int i = l;i < r;i++){
-        if(sign(abs(vp[i].x - X) - d) >= 0)continue;
+        if(sign(std::abs(vp[i].x - X) - d) >= 0)continue;
         for(int j = B.size() - 1;j >= 0;j--){
-            if(sign(abs((vp[i] - B[j]).y) - d) >= 0)break;
-            if(d > abs(vp[i] - B[j]))d = abs(vp[i] - B[j]);
+            if(sign(std::abs((vp[i] - B[j]).y) - d) >= 0)break;
+            if(d > std::abs(vp[i] - B[j]))d = std::abs(vp[i] - B[j]);
         }
         B.push_back(vp[i]);
     }
     return d;
+}
+
+DD closestdist(VP &vp){
+    return closestdist(vp,0,int(vp.size()));
 }
 
 //2円の共通面積
@@ -472,7 +476,7 @@ DD twocirclearea(circle c,circle d){
     DD dist = abs(c.C - d.C);
     if(sign(dist - c.r - d.r) >= 0)return DD(0.0);
     if(sign(dist - abs(c.r - d.r)) <= 0){
-        DD r = min(c.r,d.r);
+        DD r = std::min(c.r,d.r);
         return r * r * M_PI;
     }
     //2円の交点を求めた時と同じように距離を測る
@@ -489,7 +493,7 @@ struct g_edge{
 };
 struct g_graph{
     int n;
-    vector<vector<g_edge>> es;
+    std::vector<std::vector<g_edge>> es;
     g_graph(int n_ = 0):n(n_),es(n_){}
     void add_edge(g_edge e){
         es[e.from].push_back(e);
@@ -498,7 +502,7 @@ struct g_graph{
 };
 
 //可視グラフ
-g_graph visibilitygraph(const VP& vp,const vector<polygon>& objs){
+g_graph visibilitygraph(const VP& vp,const std::vector<polygon>& objs){
     int n = vp.size();
     g_graph res(n);
     bool cross = 0;
@@ -526,7 +530,7 @@ g_graph visibilitygraph(const VP& vp,const vector<polygon>& objs){
     }
     return res;
 }
-#undef x
-#undef y
+//#undef x
+//#undef y
 
 #endif /*SORAIE_GEOMETORY_MAIN*/
