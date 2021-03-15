@@ -271,3 +271,4 @@ NTT のソルバーを生成する
 vector<mint> convolution(vector<mint> A,vector<mint> B)
 ```
 A と B を畳みこんだ結果 mod. mod を求める
+

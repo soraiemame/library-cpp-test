@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../data-structure/lazysegtree.hpp"
+#include "../../data-structure/lazysegtree.hpp"
 
 int main(){
     int N,Q;

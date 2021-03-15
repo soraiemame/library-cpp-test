@@ -1,8 +1,8 @@
-#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_E"
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_H"
 
 #include <iostream>
 
-#include "../data-structure/lazysegtree.hpp"
+#include "../../data-structure/lazysegtree.hpp"
 
 int main(){
     int N,Q;
@@ -15,12 +15,12 @@ int main(){
         if(t == 0){
             int s,t,x;
             std::cin >> s >> t >> x;
-            S.range_add(s - 1,t,x);
+            S.range_add(s,t + 1,x);
         }
         if(t == 1){
-            int a;
-            std::cin >> a;
-            std::cout << S.get(a - 1) << "\n";
+            int s,t;
+            std::cin >> s >> t;
+            std::cout << S.range_min(s,t + 1) << "\n";
         }
     }
 }

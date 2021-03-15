@@ -18,6 +18,10 @@ unsigned long long xor128(unsigned long long a,unsigned long long b){
     return xor128(b - a + 1) + a;
 }
 
+long long xor128(long long a,long long b){
+    return xor128(b - a - 1) + a;
+}
+
 std::random_device randomd;
 std::mt19937_64 mt(randomd());
 long long randint(){

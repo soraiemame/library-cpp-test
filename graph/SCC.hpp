@@ -1,11 +1,5 @@
-#line 1 "SCC.test.cpp"
-#define PROBLEM ""
-
-#include <iostream>
-
-#line 1 "/mnt/c/Users/funas/OneDrive/\u30c7\u30b9\u30af\u30c8\u30c3\u30d7/cpp/library-cpp/graph/SCC.hpp"
-
-
+#ifndef SORAIE_SCC
+#define SORAIE_SCC
 
 #include <vector>
 
@@ -59,24 +53,4 @@ public:
     }
 };
 
-
-#line 6 "SCC.test.cpp"
-
-int main(){
-    int N,M;
-    std::cin >> N >> M;
-    SCC scc(N);
-    for(int i = 0;i < M;i++){
-        int a,b;
-        std::cin >> a >> b;
-        scc.add_edge(a,b);
-    }
-    scc.build();
-    auto ans = scc.components();
-    std::cout << ans.size() << "\n";
-    for(auto x : ans){
-        std::cout << x.size();
-        for(int i = 0;i < x.size();i++)std::cout << " " << x[i];
-        std::cout << "\n";
-    }
-}
+#endif /*SORAIE_SCC*/
