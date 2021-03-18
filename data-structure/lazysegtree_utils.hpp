@@ -2,6 +2,7 @@
 #define SORAIE_LAZYSEGTREE_UTILS
 
 #include <algorithm>
+#include <iostream>
 
 #include "lazysegtree_abstract.hpp"
 
@@ -19,30 +20,41 @@ namespace tools{
     T _max(T a,T b){return std::max(a,b);}
     template<class T>
     T sum(T a,T b){return a + b;}
-};
-namespace min_update{
-    template<class S>
-    S none(S f,S x){return f == tools::lim_max<S>() ? x : f;}
-    template<class S>
-    using RMQ_RUQ = lazy_segtree_base<S,tools::_min<S>,tools::lim_max<S>,S,none<S>,none<S>,tools::lim_max<S>>;
-};
-namespace sum_add{
     template<class T>
-    struct S{
+    T none(T a,T b){return a == tools::lim_max<T>() ? b : a;}
+
+    template<class T>
+    struct range_add{
         T val;
         int size;
+        friend std::ostream& operator<<(std::ostream& os,range_add r){return os << r.val;}
     };
     template<class T>
-    S<T> e(){return S{T(0),1};}
+    range_add<T> range_add_sum(range_add<T> a,range_add<T> b){return range_add<T>{a.val + b.val,a.size + b.size};}
     template<class T>
-    S<T> op(S<T> a,S<T> b){return S<T>{a.val + b.val,a.size + b.size};}
+    range_add<T> range_add_e(){return range_add<T>{T(0),1};}
     template<class T>
-    S<T> mapping(T f,S<T> x){return S<T>{x.size * f + x.val,x.size};}
+    range_add<T> range_add_add(T f,range_add<T> x){return range_add<T>{x.size * f + x.val,x.size};}
     template<class T>
-    using RSQ_RAQ = lazy_segtree_base<S<T>,op<T>,e<T>,T,mapping<T>,tools::sum<T>,tools::zero<T>>;
+    range_add<T> range_add_update(T f,range_add<T> x){return f == lim_max<T>() ? x : range_add<T>{x.size * f,x.size};}
 };
 
-using min_update::RMQ_RUQ;
-using sum_add::RSQ_RAQ;
+namespace aliases{
+    template<class T>
+    using RMQ_RUQ = lazy_segtree_base<T,tools::_min<T>,tools::lim_max<T>,T,tools::none<T>,tools::none<T>,tools::lim_max<T>>;
+    template<class T>
+    using RMQ_RAQ = lazy_segtree_base<T,tools::_min<T>,tools::lim_max<T>,T,tools::sum<T>,tools::sum<T>,tools::zero<T>>;
+    template<class T>
+    using RSQ_RUQ = lazy_segtree_base<tools::range_add<T>,tools::range_add_sum<T>,tools::range_add_e<T>,
+    T,tools::range_add_update<T>,tools::none<T>,tools::lim_max<T>>;
+    template<class T>
+    using RSQ_RAQ = lazy_segtree_base<tools::range_add<T>,tools::range_add_sum<T>,tools::range_add_e<T>,
+    T,tools::range_add_add,tools::sum<T>,tools::zero<T>>;
+};
+
+using aliases::RMQ_RAQ;
+using aliases::RMQ_RUQ;
+using aliases::RSQ_RAQ;
+using aliases::RSQ_RUQ;
 
 #endif /*SORAIE_LAZYSEGTREE_UTILS*/

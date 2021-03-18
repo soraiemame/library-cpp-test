@@ -4,40 +4,92 @@
 #include <vector>
 #include <assert.h>
 
-template<class S,S (*op)(S,S),S (*e)(),class F,S (*mapping)(F,S),F (*composition)(F,F),F(*id)()>
-struct lazy_segtree_base{
-    lazy_segtree_base(int _n):h(0),sz(_n){
-        int x = 1;
-        while(x < sz)x <<= 1,h++;
-        n = x;
-        data = std::vector<S>(2 * n,e());
-        lazy = std::vector<F>(n,id());
+template <class S,
+          S (*op)(S, S),
+          S (*e)(),
+          class F,
+          S (*mapping)(F, S),
+          F (*composition)(F, F),
+          F (*id)()>
+struct lazy_segtree_base {
+  public:
+    lazy_segtree_base() : lazy_segtree_base(0) {}
+    explicit lazy_segtree_base(int n) : lazy_segtree_base(std::vector<S>(n, e())) {}
+    explicit lazy_segtree_base(const std::vector<S>& v) : _n(int(v.size())) {
+        log = 0,size = 1;
+        while(size < _n)size <<= 1,log++;
+        d = std::vector<S>(2 * size, e());
+        lz = std::vector<F>(size, id());
+        for (int i = 0; i < _n; i++) d[size + i] = v[i];
+        for (int i = size - 1; i >= 1; i--) {
+            update(i);
+        }
     }
-    lazy_segtree_base(const std::vector<S>& v):sz(v.size()){
-        int x = 1;
-        while(x < sz)x <<= 1,h++;
-        n = x;
-        data = std::vector<S>(2 * n,e());
-        lazy = std::vector<F>(n,id());
-        for(int i = 0;i < sz;i++)data[n + i] = v[i];
-        for(int i = n - 1;i >= 1;i--)update(i);
+
+    void set(int p, S x) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        d[p] = x;
+        for (int i = 1; i <= log; i++) update(p >> i);
     }
-    
-    void update(int l,int r,F f){
-        assert(0 <= l && l <= r && r <= sz);
-        if(l == r)return;
-        l += n;
-        r += n;
-        for(int i = h;i >= 1;i--){
-            if(((l >> i) << i) != l)push(l >> i);
-            if(((r >> i) << i) != r)push((r - 1) >> i);
+
+    S get(int p) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        return d[p];
+    }
+
+    S query(int l, int r) {
+        assert(0 <= l && l <= r && r <= _n);
+        if (l == r) return e();
+
+        l += size;
+        r += size;
+
+        for (int i = log; i >= 1; i--) {
+            if (((l >> i) << i) != l) push(l >> i);
+            if (((r >> i) << i) != r) push((r - 1) >> i);
+        }
+
+        S sml = e(), smr = e();
+        while (l < r) {
+            if (l & 1) sml = op(sml, d[l++]);
+            if (r & 1) smr = op(d[--r], smr);
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return op(sml, smr);
+    }
+
+    S query_all() { return d[1]; }
+
+    void update(int p, F f) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        d[p] = mapping(f, d[p]);
+        for (int i = 1; i <= log; i++) update(p >> i);
+    }
+    void update(int l, int r, F f) {
+        assert(0 <= l && l <= r && r <= _n);
+        if (l == r) return;
+
+        l += size;
+        r += size;
+
+        for (int i = log; i >= 1; i--) {
+            if (((l >> i) << i) != l) push(l >> i);
+            if (((r >> i) << i) != r) push((r - 1) >> i);
         }
 
         {
-            int l2 = l,r2 = r;
-            while(l < r){
-                if(l & 1)all_apply(l++,f);
-                if(r & 1)all_apply(--r,f);
+            int l2 = l, r2 = r;
+            while (l < r) {
+                if (l & 1) all_apply(l++, f);
+                if (r & 1) all_apply(--r, f);
                 l >>= 1;
                 r >>= 1;
             }
@@ -45,137 +97,87 @@ struct lazy_segtree_base{
             r = r2;
         }
 
-        for(int i = 1;i <= h;i++){
-            if(((l >> i) << i) != l)update(l >> i);
-            if(((r >> i) << i) != r)update((r - 1) >> i);
+        for (int i = 1; i <= log; i++) {
+            if (((l >> i) << i) != l) update(l >> i);
+            if (((r >> i) << i) != r) update((r - 1) >> i);
         }
     }
 
-    S query(int l,int r){
-        assert(0 <= l && l <= r && r <= sz);
-        if(l == r)return e();
-        l += n;
-        r += n;
-        for(int i = h;i >= 1;i--){
-            if(((l >> i) << i) != l)push(l >> i);
-            if(((r >> i) << i) != r)push((r - 1) >> i);
-        }
-        S vl = e(),vr = e();
-        while(l < r){
-            if(l & 1)vl = op(vl,data[l++]);
-            if(r & 1)vr = op(data[--r],vr);
-            l >>= 1;
-            r >>= 1;
-        }
-        return op(vl,vr);
+    template <bool (*g)(S)> int max_right(int l) {
+        return max_right(l, [](S x) { return g(x); });
     }
-
-    S get(int p){
-        assert(0 <= p && p <= sz);
-        p += n;
-        for(int i = h;i >= 1;i--)push(p >> i);
-        return data[p];
-    }
-
-    void set(int p,S a){
-        assert(0 <= p && p <= sz);
-        p += n;
-        for(int i = h;i >= 1;i--)push(p >> i);
-        data[p] = a;
-        for(int i = 1;i <= h;i++)update(p >> i);
-    }
-
-    void update(int p,F f){
-        assert(0 <= p && p <= sz);
-        p += n;
-        for(int i = h;i >= 1;i--)push(p >> i);
-        data[p] = mapping(f,data[p]);
-        for(int i = 1;i <= h;i++)update(p >> i);
-    }
-
-    S query_all(){
-        return data[1];
-    }
-
-    template <bool (*g)(S)>
-    int max_right(int l){
-        return max_right(l,[](S x) {return g(x);});
-    }
-    template <class G>
-    int max_right(int l,G g){
-        assert(0 <= l && l <= sz);
+    template <class G> int max_right(int l, G g) {
+        assert(0 <= l && l <= _n);
         assert(g(e()));
-        if (l == sz) return sz;
-        l += n;
-        for (int i = h;i >= 1;i--)push(l >> i);
+        if (l == _n) return _n;
+        l += size;
+        for (int i = log; i >= 1; i--) push(l >> i);
         S sm = e();
-        do{
-            while(l % 2 == 0)l >>= 1;
-            if(!g(op(sm,data[l]))){
-                while(l < n){
+        do {
+            while (l % 2 == 0) l >>= 1;
+            if (!g(op(sm, d[l]))) {
+                while (l < size) {
                     push(l);
                     l = (2 * l);
-                    if(g(op(sm,data[l]))){
-                        sm = op(sm,data[l]);
+                    if (g(op(sm, d[l]))) {
+                        sm = op(sm, d[l]);
                         l++;
                     }
                 }
-                return l - n;
+                return l - size;
             }
-            sm = op(sm,data[l]);
+            sm = op(sm, d[l]);
             l++;
-        }while((l & -l) != l);
-        return sz;
+        } while ((l & -l) != l);
+        return _n;
     }
 
-    template <bool (*g)(S)>
-    int min_left(int r){
-        return min_left(r, [](S x){return g(x);});
+    template <bool (*g)(S)> int min_left(int r) {
+        return min_left(r, [](S x) { return g(x); });
     }
-    template <class G>
-    int min_left(int r,G g){
-        assert(0 <= r && r <= sz);
+    template <class G> int min_left(int r, G g) {
+        assert(0 <= r && r <= _n);
         assert(g(e()));
-        if(r == 0)return 0;
-        r += n;
-        for(int i = h;i >= 1;i--)push((r - 1) >> i);
+        if (r == 0) return 0;
+        r += size;
+        for (int i = log; i >= 1; i--) push((r - 1) >> i);
         S sm = e();
-        do{
+        do {
             r--;
-            while(r > 1 && (r % 2))r >>= 1;
-            if(!g(op(data[r],sm))){
-                while(r < n){
+            while (r > 1 && (r % 2)) r >>= 1;
+            if (!g(op(d[r], sm))) {
+                while (r < size) {
                     push(r);
                     r = (2 * r + 1);
-                    if (g(op(data[r],sm))){
-                        sm = op(data[r],sm);
+                    if (g(op(d[r], sm))) {
+                        sm = op(d[r], sm);
                         r--;
                     }
                 }
-                return r + 1 - n;
+                return r + 1 - size;
             }
-            sm = op(data[r],sm);
-        }while((r & -r) != r);
+            sm = op(d[r], sm);
+        } while ((r & -r) != r);
         return 0;
     }
 
-private:
-    int n,h,sz;
-    std::vector<S> data;
-    std::vector<F> lazy;
+  private:
+    int _n, size, log;
+    std::vector<S> d;
+    std::vector<F> lz;
 
-    void all_apply(int k,F f){
-        data[k] = mapping(f,data[k]);
-        if(k < n)lazy[k] = composition(f,lazy[k]);
+    void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
+    void all_apply(int k, F f) {
+        d[k] = mapping(f, d[k]);
+        if (k < size) lz[k] = composition(f, lz[k]);
     }
-    void push(int k){
-        all_apply(2 * k,lazy[k]);
-        all_apply(2 * k + 1,lazy[k]);
-        lazy[k] = id();
-    }
-    void update(int k){
-        data[k] = op(data[2 * k],data[2 * k + 1]);
+    void push(int k) {
+        all_apply(2 * k, lz[k]);
+        all_apply(2 * k + 1, lz[k]);
+        lz[k] = id();
     }
 };
+
+
 
 #endif /*SORAIE_LAZYSEGTREE_ABSTRACT*/
