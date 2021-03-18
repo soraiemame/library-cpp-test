@@ -18,7 +18,7 @@ int main(){
     std::cout << ans.size() << "\n";
     for(auto x : ans){
         std::cout << x.size();
-        for(int i = 0;i < x.size();i++)std::cout << " " << x[i];
+        for(int i = 0;i < int(x.size());i++)std::cout << " " << x[i];
         std::cout << "\n";
     }
 }
