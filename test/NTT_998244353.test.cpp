@@ -14,8 +14,6 @@ int main(){
     std::vector<mint> A(N),B(M);
     for(int i = 0;i < N;i++)std::cin >> A[i];
     for(int i = 0;i < M;i++)std::cin >> B[i];
-    if(N > M)B.resize(N);
-    if(M > N)A.resize(M);
     auto ans = n.convolution(A,B);
     for(int i = 0;i < N + M - 1;i++)std::cout << ans[i] << (i == N + M - 2 ? "\n" : " ");
 }

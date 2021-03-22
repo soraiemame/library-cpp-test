@@ -1,5 +1,5 @@
-#ifndef SORAIE_SQRT_DEC2
-#define SORAIE_SQRT_DEC2
+#ifndef SORAIE_SQRT_DEC
+#define SORAIE_SQRT_DEC
 
 #include <vector>
 #include <algorithm>
@@ -8,11 +8,16 @@
 template<class T>
 struct sqrt_dec{
     struct bucket{
-        void chmin(T& a,T b){if(a > b)a = b;}
-        void chmax(T& a,T b){if(a < b)a = b;}
         std::vector<T> dat,so,wa;
-        T LM,min_val,max_val,add_val,low_val,high_val;
         int l,r;
+        T LM,min_val,max_val,add_val,low_val,high_val;
+        bucket(const std::vector<T>& a,int l_,int r_,T LM_):l(l_),r(r_),LM(LM_),add_val(0),low_val(-LM),high_val(LM){
+            dat = std::vector<T>(r - l);
+            wa = std::vector<T>(r - l + 1);
+            for(int i = l;i < r;i++)dat[i - l] = a[i];
+            eval_calc();
+        }
+
         void eval_update(){
             for(auto &i : dat)i = std::clamp(i + add_val,low_val,high_val);
             add_val = 0;
@@ -22,12 +27,12 @@ struct sqrt_dec{
         void eval_calc(){
             so = dat;
             std::sort(so.begin(),so.end());
-            for(int i = 0;i < so.size();i++)wa[i + 1] = wa[i] + so[i];
+            for(int i = 0;i < int(so.size());i++)wa[i + 1] = wa[i] + so[i];
             min_val = LM;
             max_val = -LM;
             for(T &i : dat){
-                chmin(min_val,i);
-                chmax(max_val,i);
+                if(min_val > i)min_val = i;
+                if(max_val < i)max_val = i;
             }
         }
         void update_part(int a,int b,T add_val_,T low_val_,T high_val_){
@@ -52,7 +57,7 @@ struct sqrt_dec{
         }
         T min_part(int a,int b){
             T res = LM;
-            for(int i = a;i < b;i++)chmin(res,std::clamp(dat[i] + add_val,low_val,high_val));
+            for(int i = a;i < b;i++)res = std::min(res,std::clamp(dat[i] + add_val,low_val,high_val));
             return res;
         }
         T min_all(){
@@ -60,18 +65,11 @@ struct sqrt_dec{
         }
         T max_part(int a,int b){
             T res = -LM;
-            for(int i = a;i < b;i++)chmax(res,std::clamp(dat[i] + add_val,low_val,high_val));
+            for(int i = a;i < b;i++)res = std::max(res,std::clamp(dat[i] + add_val,low_val,high_val));
             return res;
         }
         T max_all(){
             return std::clamp(max_val + add_val,low_val,high_val);
-        }
-
-        bucket(const std::vector<T>& a,int l_,int r_,T LM_):l(l_),r(r_),LM(LM_),add_val(0),low_val(-LM),high_val(LM){
-            dat = std::vector<T>(r - l);
-            wa = std::vector<T>(r - l + 1);
-            for(int i = l;i < r;i++)dat[i - l] = a[i];
-            eval_calc();
         }
 
         void range_update(int a,int b,T x){
@@ -110,19 +108,8 @@ struct sqrt_dec{
             else return sum_part(std::max(a,l) - l,std::min(b,r) - l);
         }
     };
-    void chmin(T& a,T b){if(a > b)a = b;}
-    void chmax(T& a,T b){if(a < b)a = b;}
-    int n;
-    T LM;
-    std::vector<bucket> dat;
     sqrt_dec(const std::vector<T>& a,int bs,T LM_){init(a,bs,LM_);}
     sqrt_dec(int n_,int bs,T LM_){init(std::vector<T>(n_,bs,LM_));}
-    void init(const std::vector<T>& a,int bs,T LM_){
-        LM = LM_;
-        n = a.size();
-        dat = std::vector<bucket>();
-        for(int i = 0;i < a.size();i += bs)dat.push_back(bucket(a,i,std::min(int(i + bs),int(a.size())),LM));
-    }
     void range_update(int a,int b,T x){
         for(auto &i : dat)i.range_update(a,b,x);
     }
@@ -137,12 +124,12 @@ struct sqrt_dec{
     }
     T range_min(int a,int b){
         T res = LM;
-        for(auto &i : dat)chmin(res,i.range_min(a,b));
+        for(auto &i : dat)res = std::min(res,i.range_min(a,b));
         return res;
     }
     T range_max(int a,int b){
         T res = -LM;
-        for(auto &i : dat)chmax(res,i.range_max(a,b));
+        for(auto &i : dat)res = std::max(res,i.range_max(a,b));
         return res;
     }
     T range_sum(int a,int b){
@@ -157,6 +144,17 @@ struct sqrt_dec{
         std::cerr << "debug: [";
         for(int i = 0;i < n;i++)std::cerr << range_min(i,i + 1) << (i == n - 1 ? "]\n":",");
     }
+    
+private:
+    int n;
+    T LM;
+    std::vector<bucket> dat;
+    void init(const std::vector<T>& a,int bs,T LM_){
+        LM = LM_;
+        n = a.size();
+        dat = std::vector<bucket>();
+        for(int i = 0;i < int(a.size());i += bs)dat.push_back(bucket(a,i,std::min(int(i + bs),int(a.size())),LM));
+    }
 };
 
-#endif /*SORAIE_SQRT_DEC2*/
+#endif /*SORAIE_SQRT_DEC*/

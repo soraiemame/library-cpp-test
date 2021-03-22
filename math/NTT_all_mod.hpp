@@ -19,13 +19,14 @@ struct NTT_all{
     NTT_all(){}
     
     std::vector<mint> convolution(const std::vector<mint>& A,const std::vector<mint>& B){
-        assert(A.size() == B.size());
-        int sz = A.size();
-        std::vector<mint1> A1(sz),B1(sz);
-        std::vector<mint2> A2(sz),B2(sz);
-        std::vector<mint3> A3(sz),B3(sz);
-        for(int i = 0;i < sz;i++){
+        int sza = A.size(),szb = B.size();
+        std::vector<mint1> A1(sza),B1(szb);
+        std::vector<mint2> A2(sza),B2(szb);
+        std::vector<mint3> A3(sza),B3(szb);
+        for(int i = 0;i < sza;i++){
             A1[i] = A[i].x;A2[i] = A[i].x;A3[i] = A[i].x;
+        }
+        for(int i = 0;i < szb;i++){
             B1[i] = B[i].x;B2[i] = B[i].x;B3[i] = B[i].x;
         }
         auto C1 = ntt1.convolution(A1,B1);
@@ -40,13 +41,17 @@ struct NTT_all{
         return res;
     }
     std::vector<long long> convolution(const std::vector<long long>& A,const std::vector<long long>& B){
-        assert(A.size() == B.size());
-        int sz = A.size();
-        std::vector<long long> A1(sz),B1(sz),A2(sz),B2(sz),A3(sz),B3(sz);
-        for(int i = 0;i < sz;i++){
-            A1[i] = A[i] % 2013265921;B1[i] = B[i] % 2013265921;
-            A2[i] = A[i] % 998244353;B2[i] = B[i] % 998244353;
-            A3[i] = A[i] % 469762049;B3[i] = B[i] % 469762049;
+        int sza = A.size(),szb = B.size();
+        std::vector<long long> A1(sza),B1(szb),A2(sza),B2(szb),A3(sza),B3(szb);
+        for(int i = 0;i < sza;i++){
+            A1[i] = A[i] % 2013265921;
+            A2[i] = A[i] % 998244353;
+            A3[i] = A[i] % 469762049;
+        }
+        for(int i = 0;i < szb;i++){
+            B1[i] = B[i] % 2013265921;
+            B2[i] = B[i] % 998244353;
+            B3[i] = B[i] % 469762049;
         }
         auto C1 = ntt1.convolution(A1,B1);
         auto C2 = ntt2.convolution(A2,B2);

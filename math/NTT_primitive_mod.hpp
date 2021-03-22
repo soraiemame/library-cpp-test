@@ -40,14 +40,12 @@ struct NTT_primitive{
         }
     }
     std::vector<mint> convolution(const std::vector<mint>& A,const std::vector<mint>& B){
-        assert(A.size() == B.size());
+        // assert(A.size() == B.size());
         int sz = 1;
         while(sz < int(A.size() + B.size()))sz <<= 1;
         std::vector<mint> f(sz),g(sz);
-        for(int i = 0;i < int(A.size());i++){
-            f[i] = A[i];
-            g[i] = B[i];
-        }
+        for(int i = 0;i < int(A.size());i++)f[i] = A[i];
+        for(int i = 0;i < int(B.size());i++)g[i] = B[i];
         dft(f,1);dft(g,1);
         for(int i = 0;i < sz;i++)f[i] = f[i] * g[i];
         dft(f,-1);
@@ -74,14 +72,12 @@ struct NTT_primitive{
         }
     }
     std::vector<long long> convolution(const std::vector<long long>& A,const std::vector<long long>& B){
-        assert(A.size() == B.size());
+        // assert(A.size() == B.size());
         int sz = 1;
         while(sz < int(A.size() + B.size()))sz <<= 1;
         std::vector<long long> f(sz),g(sz);
-        for(int i = 0;i < int(A.size());i++){
-            f[i] = A[i] % MOD;
-            g[i] = B[i] % MOD;
-        }
+        for(int i = 0;i < int(A.size());i++)f[i] = A[i] % MOD;
+        for(int i = 0;i < int(B.size());i++)g[i] = B[i] % MOD;
         dft(f,1);dft(g,1);
         for(int i = 0;i < sz;i++)f[i] = f[i] * g[i] % MOD;
         dft(f,-1);
