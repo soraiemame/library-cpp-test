@@ -5,8 +5,7 @@
 #include "../../math/bigint.hpp"
 
 int main(){
-    string S,T;
-    cin >> S >> T;
-    bint a(S),b(T);
-    cout << (a + b).to_string() << "\n";
+    bint a,b;
+    std::cin >> a >> b;
+    std::cout << a + b << "\n";
 }
