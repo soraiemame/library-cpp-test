@@ -9,8 +9,16 @@
 #include <string>
 
 namespace bigint_convolution{
-    std::function<std::vector<long long>(std::vector<long long>,std::vector<long long>)> convolution;
-    void set(const std::function<std::vector<long long>(std::vector<long long>,std::vector<long long>)>& f){convolution = f;}
+    bool is_set = false;
+    std::function<std::vector<long long>(std::vector<long long>,std::vector<long long>)> f;
+    void set(const std::function<std::vector<long long>(std::vector<long long>,std::vector<long long>)>& _f){
+        is_set = true;
+        f = _f;
+    }
+    std::vector<long long> convolution(const std::vector<long long>& a,const std::vector<long long>& b){
+        assert(is_set);
+        return f(a,b);
+    }
     std::vector<long long> naive(const std::vector<long long>& a,const std::vector<long long>& b){
         int n = int(a.size()),m = int(b.size());
         std::vector<long long> res(n + m - 1);
@@ -37,6 +45,7 @@ struct bigint{
             dat.push_back(std::stoll(s.substr(i,d)));
         }
         if(i + d)dat.push_back(std::stoll(s.substr(0,i + d)));
+        while(!dat.empty() && dat.back() == 0)dat.pop_back();
     }
     bigint(long long n = 0){
         sign = 1;
@@ -72,7 +81,7 @@ struct bigint{
     }
     long long to_ll()const{
         long long res = 0;
-        for(long long x : dat)res = res * base + x;
+        for(int i = size() - 1;i >= 0;i--)res = res * base + dat[i];
         return sign * res;
     }
     void norm(){
@@ -159,10 +168,11 @@ struct bigint{
         bint res(*this);
         int nex = 0;
         for(int i = res.size() - 1;i >= 0;i--){
-            long long cur = (res[i] + nex * base);
-            res[i] = cur / 2;
-            nex = cur % 2;
+            long long cur = (res.dat[i] + nex * base);
+            res.dat[i] = cur >> 1;
+            nex = cur & 1;
         }
+        while(!res.dat.empty() && res.dat.back() == 0)res.dat.pop_back();
         return res;
     }
     inline constexpr int rem2()const noexcept{
@@ -244,7 +254,7 @@ struct bigint{
         a = bint(s);
         return is;
     }
-    
+
     explicit operator bool()const noexcept{return !dat.empty();}
     explicit operator int()const noexcept{return to_ll();}
     using long_long = long long;
