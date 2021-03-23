@@ -244,6 +244,11 @@ struct bigint{
         a = bint(s);
         return is;
     }
+    
+    explicit operator bool()const noexcept{return !dat.empty();}
+    explicit operator int()const noexcept{return to_ll();}
+    using long_long = long long;
+    explicit operator long_long()const noexcept{return to_ll();}
 
 private:
     int sign;
