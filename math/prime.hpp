@@ -42,7 +42,7 @@ namespace prime{
     bool is_prime(long long n){
         if(n <= 2)return n == 2;
         else if(~n & 1)return false;
-        else if(n <= 4'759'123'141)return miller_rabin(n,{2,7,61});
+        else if(n < 4'759'123'141)return miller_rabin(n,{2,7,61});
         else return miller_rabin(n,{2,325,9375,28178,450775,9780504,1795265022});
     }
 
