@@ -151,6 +151,7 @@ struct bigint{
     inline constexpr bint operator--(int)noexcept{operator--();return bint(*this);}
 
     inline constexpr bint &operator*=(const bint& a)noexcept{
+        assert(bigint_convolution::is_set);
         if(size() == 0 || a.size() == 0)return *this = bint(0);
         if(std::min(size(),a.size()) <= 60)dat = bigint_convolution::naive(dat,a.dat);
         else dat = bigint_convolution::convolution(dat,a.dat);

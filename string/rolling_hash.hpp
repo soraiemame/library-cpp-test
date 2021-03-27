@@ -35,7 +35,7 @@ private:
         }
     }
 public:
-    std::vector<unsigned long long> build(const std::string &S){
+    std::vector<unsigned long long> build(const std::string &S)const{
         int sz = S.size();
         std::vector<unsigned long long> res(sz + 1);
         for(int i = 0;i < sz;i++){
@@ -44,11 +44,22 @@ public:
         return res;
     }
 
+    template<class T>
+    std::vector<unsigned long long> build(const std::vector<T> &v)const{
+        int sz = v.size();
+        std::vector<unsigned long long> res(sz + 1);
+        for(int i = 0;i < sz;i++){
+            res[i + 1] = add(mul(res[i],base),v[i]);
+        }
+        return res;
+    }
+
     unsigned long long get(const std::vector<unsigned long long>& hashed,int l,int r){
         expand(r - l);
         return add(hashed[r],mod - mul(hashed[l],pows[r - l]));
     }
-    rolling_hash(unsigned long long _base = gen_base()):base(_base),pows{1}{}
+
+    explicit rolling_hash(unsigned long long _base = gen_base()):base(_base),pows{1}{}
 };
 
 #endif/*SORAIE_ROLLING_HASH*/
