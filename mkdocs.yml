@@ -1,0 +1,75 @@
+site_name: library-cpp
+site_url: https://soraiemame.github.io/library-cpp/
+repo_url: https://github.com/soraiemame/library-cpp.git/
+repo_name: soraiemame/library-cpp
+site_author: soraie
+site_description: >-
+  library-cpp
+theme:
+  name: material
+  language: ja
+  favicon: assets/img/favicon.ico
+  features:
+    - navigation.tabs
+  palette:
+    accent: green
+    primary: deep orange
+
+# extra:
+#   social:
+#     - icon: fontawesome/brands/github
+#       link: https://github.com/kclc-kaisei/kclc-kaisei.github.io
+#     - icon: fontawesome/brands/twitter
+#       link: https://twitter.com/42ndKCLC
+
+markdown_extensions:
+  # extension for syntax highlight
+  # - codehilite
+  - codehilite:
+      linenums: true
+
+  - markdown.extensions.admonition
+  - markdown.extensions.attr_list
+  - markdown.extensions.def_list
+  - markdown.extensions.footnotes
+  - markdown.extensions.meta
+  - markdown.extensions.toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+  - macros
+  # - git-revision-date-localized
