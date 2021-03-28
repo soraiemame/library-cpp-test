@@ -40,6 +40,13 @@ std::ostream &operator<<(std::ostream& os,lineseg l){return os << l.S << "->" <<
 DD det(Point a,Point b){return a.x * b.y - a.y * b.x;}
 DD dot(Point a,Point b){return a.x * b.x + a.y * b.y;}
 
+//oを中心にpをtheta反時計回りに回転
+Point rot(Point o,Point p,DD theta){
+    Point pp = p - o;
+    Point res(pp.x * cosl(theta) - pp.y * sinl(theta),pp.x * sinl(theta) + pp.y * cosl(theta));
+    return res + o;
+}
+
 //a->b->cの進み方
 int dir(Point a,Point b,Point c){
     b -= a;c -= a;
@@ -350,7 +357,6 @@ circle minenclosingcircle2(const VP &ps){
     }
     return circle(c,r);
 }
-
 
 
 //多角形の面積
